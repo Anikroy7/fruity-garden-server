@@ -31,10 +31,26 @@ async function run() {
 
         app.get('/product/:id', async (req, res) => {
             const id = req.params.id
-            console.log(id);
             const query = { _id: ObjectId(id) }
             const product = await productCollection.findOne(query);
             res.send(product)
+        })
+
+        app.put('/product', async (req, res) => {
+            const id = req.body._id;
+            const updatedUser = req.body;
+            console.log(updatedUser);
+            const filter = { _id: ObjectId(id) }
+            const options = { upsert: true };
+            const updateDoc = {
+                $set: {
+                    quantity: updatedUser.quantity
+                }
+            }
+            const result = await productCollection.updateOne(filter, updateDoc, options)
+            res.send(result)
+            console.log(result
+            );
         })
 
     }
