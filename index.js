@@ -2,11 +2,24 @@ const express = require('express');
 const app = express();
 const port = process.env.PORT || 5000;
 const cors = require('cors');
+const jwt = require('jsonwebtoken');
 require('dotenv').config()
 
 // middleware
 app.use(cors());
 app.use(express.json());
+
+// verify jwt
+
+function verifyJwt(req, res, next) {
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
+        return res.status(401).send({ message: "unauthorized access" })
+    }
+    console.log('veiieie', authHeader);
+    next()
+
+}
 
 // connetion to db
 
@@ -22,8 +35,8 @@ async function run() {
 
         const productCollection = client.db('fruityGarden').collection('product');
 
-        app.get('/product', async (req, res) => {
-            console.log(req.query);
+        app.get('/product', verifyJwt, async (req, res) => {
+
             const email = req.query.email;
             const query = { email };
             const cursor = productCollection.find(query);
@@ -66,6 +79,17 @@ async function run() {
             console.log(req.body);
             const result = await productCollection.insertOne(doc);
             res.send(result)
+        })
+
+        // for auth
+
+        app.post('/login', (req, res) => {
+            const user = req.body;
+            console.log(user);
+            const token = jwt.sign(user, process.env.ACCSESS_TOKEN, {
+                expiresIn: '1d'
+            })
+            res.send({ token })
         })
 
     }
