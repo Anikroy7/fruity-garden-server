@@ -35,7 +35,7 @@ async function run() {
 
         const productCollection = client.db('fruityGarden').collection('product');
 
-        app.get('/product', verifyJwt, async (req, res) => {
+        app.get('/product', async (req, res) => {
 
             const email = req.query.email;
             const query = { email };
