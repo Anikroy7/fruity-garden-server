@@ -49,8 +49,7 @@ async function run() {
             }
             const result = await productCollection.updateOne(filter, updateDoc, options)
             res.send(result)
-            console.log(result
-            );
+
         })
 
     }
