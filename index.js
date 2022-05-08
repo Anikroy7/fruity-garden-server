@@ -23,7 +23,9 @@ async function run() {
         const productCollection = client.db('fruityGarden').collection('product');
 
         app.get('/product', async (req, res) => {
-            const query = {};
+            console.log(req.query);
+            const email = req.query.email;
+            const query = { email };
             const cursor = productCollection.find(query);
             const products = await cursor.toArray();
             res.send(products)
