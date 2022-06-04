@@ -36,7 +36,6 @@ async function run() {
         const productCollection = client.db('fruityGarden').collection('product');
 
         app.get('/product', async (req, res) => {
-
             const query = {};
             const cursor = productCollection.find(query);
             const products = await cursor.toArray();
